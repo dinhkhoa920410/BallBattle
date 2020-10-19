@@ -9,7 +9,7 @@ public class GameMaster : MonoBehaviour
 
     ///////
     public const int MAX_ROUND = 5;
-    public const float TIME_LIMIT = 20;
+    public const float TIME_LIMIT = 140;
     public const float RUSH_TIME = 15;
     Vector2 WINDOW_UI_SCALE = new Vector2(1600,900);
     Vector2 ANDROID_UI_SCALE = new Vector2(800, 600);
@@ -52,7 +52,6 @@ public class GameMaster : MonoBehaviour
             mainUIScaler.referenceResolution = WINDOW_UI_SCALE;
             changeClothesUIScaler.referenceResolution = WINDOW_UI_SCALE;
         #endif
-
     }
 
     // Start is called before the first frame update

@@ -42,6 +42,10 @@ public class ARController : MonoBehaviour
     {
         UpdatePlacementPose();
         UpdatePlacementIndicator();
+        if(isAROn){
+            pinchToScale();
+            swipeToRotate();
+        }
         
         //RaycastHit hit;
         if(Input.GetMouseButtonDown(0)){
@@ -103,7 +107,7 @@ public class ARController : MonoBehaviour
         cameraAR.gameObject.SetActive(isAROn);
         placementIndicator.SetActive(isAROn);
         planeVisualizerButton.SetActive(isAROn);
-        planeManager.enabled = isPlaneVisualizerOn;
+        planeManager.enabled = isAROn && isPlaneVisualizerOn;
         //Pause and invisible playground
         if(!isGameAlreadyPlaced){
             GameMaster.GM.pauseGame();
@@ -125,5 +129,36 @@ public class ARController : MonoBehaviour
         isPlaneVisualizerOn = !isPlaneVisualizerOn;
         foreach (var plane in planeManager.trackables)
             plane.gameObject.SetActive(isPlaneVisualizerOn);
+    }
+
+    void pinchToScale(){
+        if(Input.touchCount == 2){
+            float prevDistance=1, curDistance=1;
+            Touch touch0, touch1;
+            touch0 = Input.GetTouch(0);
+            touch1 = Input.GetTouch(1);
+            Vector2 touch0PrevPos = touch0.position - touch0.deltaPosition;
+            Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
+
+            prevDistance = (touch0PrevPos - touch1PrevPos).magnitude;
+            curDistance = (touch0.position - touch1.position).magnitude;
+
+            float scaleRate = curDistance/prevDistance;
+            objToPlace.transform.localScale *= scaleRate;
+        }
+    }
+
+    void swipeToRotate(){
+        if(Input.touchCount == 1){
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Moved){
+                Vector2 touchCurPos = touch.position;
+                Vector2 touchPrevPos = touch.deltaPosition;
+                float distance = (touchCurPos - touchPrevPos).magnitude;
+                if(touchCurPos.x < touchPrevPos.x)
+                    distance = -distance;
+                objToPlace.transform.RotateAround(objToPlace.transform.position, Vector3.up, distance*0.01f);
+            }
+        }
     }
 }

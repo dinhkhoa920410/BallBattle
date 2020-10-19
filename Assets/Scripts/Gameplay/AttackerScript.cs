@@ -174,6 +174,7 @@ public class AttackerScript : SoccerPlayerScript
 
     void die(){
         isActive = false;
+        transform.GetChild(3).gameObject.SetActive(true);
         GetComponentInChildren<Animator>().SetTrigger("Death");
     }
 
